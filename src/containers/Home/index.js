@@ -40,8 +40,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  loadCategories: _ => dispatch(loadCategories()),
-  selectCategory: evt => dispatch(selectCategory(evt))
+  loadCategories: () => dispatch(loadCategories()),
+  selectCategory: category => dispatch(selectCategory(category))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
