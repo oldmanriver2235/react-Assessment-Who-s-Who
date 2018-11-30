@@ -2,10 +2,8 @@ import { fetchArtists, fetchFromSpotify } from '../services/api'
 import chooseRandom from '../utils/chooseRandom'
 export const SELECT_SONG_NUMBER = 'SELECT_SONG_NUMBER'
 export const SELECT_ARTIST_NUMBER = 'SELECT_ARTIST_NUMBER'
-export const LOAD_ARTISTS_DONE = 'LOAD_ARTISTS_DONE'
-export const LOAD_SONGS_DONE = 'LOAD_SONGS_DONE'
-export const LOAD_ARTISTS_FAILURE = 'LOAD_ARTISTS_FAILURE'
-export const LOAD_SONGS_FAILURE = 'LOAD_SONGS_FAILURE'
+export const LOAD_ARTISTS_AND_SONGS_DONE = 'LOAD_ARTISTS_AND_SONGS_DONE'
+export const LOAD_ARTISTS_AND_SONGS_FAILED = 'LOAD_ARTISTS_AND_SONGS_FAILED'
 
 const initialState = {
   artists: [],
@@ -16,18 +14,6 @@ const initialState = {
 
 export default function game (state = initialState, action) {
   switch (action.type) {
-    // case LOAD_ARTISTS_DONE:
-    //   return {
-    //     ...state,
-    //     errorLoadingArtists: false,
-    //     artists: action.artists
-    //   }
-    // case LOAD_SONGS_DONE:
-    //   return {
-    //     ...state,
-    //     errorLoadingSongs: false,
-    //     songs: action.songs
-    //   }
     case LOAD_ARTISTS_AND_SONGS_DONE:
       return {
         ...state,
@@ -35,25 +21,14 @@ export default function game (state = initialState, action) {
         songs: action.songs,
         artists: action.artists
       }
-    case LOAD_ARTISTS_AND_SONGS_FAILURE:
+    case LOAD_ARTISTS_AND_SONGS_FAILED:
       return {
         ...state,
         errorLoadingArtistsAndSongs: true,
         songs: action.songs,
         artists: action.artists
       }
-    // case LOAD_ARTISTS_FAILURE:
-    //   return {
-    //     ...state,
-    //     errorLoadingArtists: true,
-    //     artists: action.artists
-    //   }
-    // case LOAD_SONGS_FAILURE:
-    //   return {
-    //     ...state,
-    //     errorLoadingSongs: true,
-    //     songs: action.songs
-    //   }
+
     case SELECT_ARTIST_NUMBER:
       return {
         ...state,
@@ -77,6 +52,15 @@ export const selectSongNumber = songs => ({
 export const selectArtistNumber = artists => ({
   type: SELECT_ARTIST_NUMBER,
   payload: artists
+})
+export const loadArtistsAndSongsDone = (artists, songs) => ({
+  type: LOAD_ARTISTS_AND_SONGS_DONE,
+  payload: artists,
+  songs
+})
+export const loadArtistsAndSongsFailed = (artists, songs) => ({
+  type: LOAD_ARTISTS_AND_SONGS_FAILED,
+  error
 })
 
 export const loadArtistsAndSongs = (genre, numArtists, numSongs) => dispatch =>
