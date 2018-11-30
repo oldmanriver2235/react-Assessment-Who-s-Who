@@ -1,47 +1,72 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import connect from 'react-redux/es/connect/connect'
+import { Container, Header, Select } from 'semantic-ui-react'
 
-import { loadCategories, selectCategory } from '../../ducks/config.duck'
+import {
+  selectNumArtists,
+  selectNumSongs,
+  loadGenres,
+  selectGenre
+} from '../../ducks/config.duck'
+import RadioGroup from '../../components/RadioGroup'
+import LinkButton from '../../components/LinkButton'
 
-class Home extends React.Component {
+class Home extends Component {
   componentDidMount () {
-    this.props.loadCategories()
+    this.props.loadGenres()
   }
-
   render () {
-    const categories = this.props.categories.map(
-      category => (
-        <option
-          key={category}
-          value={category}>{category}
-        </option>
-      )
-    )
-
+    const {
+      genres,
+      selected,
+      numSongs,
+      numArtists,
+      selectNumArtists,
+      selectNumSongs,
+      selectGenre
+    } = this.props
+    const formattedCorrectlyGenres = genres.map(genre => ({
+      key: genre,
+      value: genre,
+      text: genre
+    }))
     return (
-      <div>
-        <select onChange={(event) => this.props.selectCategory(event.target.value)}>
-          {categories}
-        </select>
-      </div>
+      <Container>
+        <Header as='h1'>Pick A Genre</Header>
+        <Select
+          value={selected}
+          options={formattedCorrectlyGenres}
+          onChange={(e, { value }) => selectGenre(value)}
+        />
+        <RadioGroup
+          title='Number of Artists'
+          options={[2, 3, 4]}
+          check={numArtists}
+          change={(e, { value }) => selectNumArtists(value)}
+        />
+        <RadioGroup
+          title='Number of Songs'
+          options={[1, 2, 3]}
+          check={numSongs}
+          change={(e, { value }) => selectNumSongs(value)}
+        />
+        <LinkButton link='/Game' buttonText='Play!' />
+      </Container>
     )
   }
 }
 
-Home.propTypes = {
-  loadCategories: PropTypes.func.isRequired,
-  selectCategory: PropTypes.func.isRequired,
-  categories: PropTypes.array
-}
-
-const mapStateToProps = (state) => ({
-  categories: state.config.categories
+const mapStateToProps = state => ({
+  genres: state.config.genres,
+  selected: state.config.selectedGenre,
+  numArtists: state.config.numArtists,
+  numSongs: state.config.numSongs
 })
-
-const mapDispatchToProps = (dispatch) => ({
-  loadCategories: () => dispatch(loadCategories()),
-  selectCategory: category => dispatch(selectCategory(category))
+const mapDispatchToProps = dispatch => ({
+  loadGenres: () => dispatch(loadGenres()),
+  selectGenre: value => dispatch(selectGenre(value)),
+  selectNumArtists: numArtists => dispatch(selectNumArtists(numArtists)),
+  selectNumSongs: numSongs => dispatch(selectNumSongs(numSongs))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

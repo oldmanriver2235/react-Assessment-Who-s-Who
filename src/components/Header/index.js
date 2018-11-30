@@ -1,8 +1,9 @@
 import React from 'react'
 
-const Header = (props) =>
+const Header = props => (
   <header>
-    <span>Header</span>
+    <span>{this.props.header}</span>
   </header>
+)
 
 export default Header

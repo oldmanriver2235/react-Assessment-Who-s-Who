@@ -14,17 +14,23 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: ['babel-loader']
-      }, {
+      },
+      {
         test: /\.html$/,
         use: ['html-loader']
-      }, {
+      },
+      {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(eot|ttf|woff|woff2|svg|png|jpe?g)$/,
+        use: ['file-loader']
       }
     ]
   },
   devServer: {
-    historyApiFallback: true,
+    historyApiFallback: true
   },
   plugins: [
     new HtmlWebpackPlugin({

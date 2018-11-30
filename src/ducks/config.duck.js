@@ -1,59 +1,80 @@
-import { fetchCategories } from '../services/api'
+import { fetchGenres } from '../services/api'
+import { bindActionCreators } from 'redux'
 
-export const LOAD_CATEGORIES_BEGIN = 'cooksys/whos-who/Home/LOAD_CATEGORIES_BEGIN'
-export const LOAD_CATEGORIES_FAILURE = 'cooksys/whos-who/Home/LOAD_CATEGORIES_FAILURE'
-export const LOAD_CATEGORIES_DONE = 'cooksys/whos-who/Home/LOAD_CATEGORIES_DONE'
-export const LOAD_CATEGORIES_UPDATE = 'cooksys/whos-who/Home/LOAD_CATEGORIES_UPDATE'
-export const SELECT_CATEGORY = 'cooksys/whos-who/Home/SELECT_CATEGORY'
+export const LOAD_GENRES_DONE = 'LOAD_GENRES_DONE'
+export const LOAD_GENRES_FAILED = 'LOAD_GENRES_FAILED'
+export const SELECT_GENRE = 'SELECT_GENRE'
+export const SELECT_NUM_ARTISTS = 'SELECT_NUM_ARTISTS'
+export const SELECT_NUM_SONGS = 'SELECT_NUM_SONGS'
 
 const initialState = {
-  categories: [],
-  errorLoadingCategories: false
+  genres: [],
+  selectedGenre: 'Select Genre',
+  numArtists: 2,
+  numSongs: 1,
+  errorLoadingGenres: {}
 }
 
-export default function config (state = initialState, action) {
+const config = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_CATEGORIES_DONE:
+    case SELECT_NUM_ARTISTS:
       return {
         ...state,
-        errorLoadingCategories: false,
-        categories: action.payload
+        numArtists: action.numArtists
       }
-    case LOAD_CATEGORIES_FAILURE:
+    case SELECT_NUM_SONGS:
       return {
         ...state,
-        errorLoadingCategories: true,
-        categories: initialState.categories
+        numSongs: action.numSongs
       }
-    case SELECT_CATEGORY:
+    case LOAD_GENRES_DONE:
       return {
         ...state,
-        selectedCategory: action.payload
+        errorLoadingGenres: false,
+        genres: action.genres
+      }
+    case LOAD_GENRES_FAILED:
+      return {
+        ...state,
+        errorLoadingGenres: true,
+        genres: []
+      }
+    case SELECT_GENRE:
+      return {
+        ...state,
+        selectedGenre: action.genre
       }
     default:
       return state
   }
 }
-
-export const selectCategory = (category) => ({
-  type: SELECT_CATEGORY,
-  payload: category
+export const selectNumArtists = numArtists => ({
+  type: SELECT_NUM_ARTISTS,
+  numArtists
+})
+export const selectNumSongs = numSongs => ({
+  type: SELECT_NUM_SONGS,
+  numSongs
 })
 
-const loadCategoriesDone = (categories) => ({
-  type: LOAD_CATEGORIES_DONE,
-  payload: categories
+const loadingGenresDone = genres => ({
+  type: LOAD_GENRES_DONE,
+  genres
 })
 
-const loadCategoriesFailure = () => ({
-  type: LOAD_CATEGORIES_FAILURE
+const loadingGenresFailed = error => ({
+  type: LOAD_GENRES_FAILED,
+  error
 })
 
-export const loadCategories = () =>
-  (dispatch) =>
-    fetchCategories()
-      .then(({ categories }) => {
-        const categoryNames = categories.items.map(c => c.name)
-        return dispatch(loadCategoriesDone(categoryNames))
-      })
-      .catch(err => dispatch(loadCategoriesFailure(err)))
+export const selectGenre = genre => ({
+  type: SELECT_GENRE,
+  genre
+})
+// asynchronous load genres
+export const loadGenres = () => dispatch =>
+  fetchGenres()
+    .then(({ genres }) => dispatch(loadingGenresDone(genres)))
+    .catch(err => dispatch(loadingGenresFailed(err)))
+
+export default config

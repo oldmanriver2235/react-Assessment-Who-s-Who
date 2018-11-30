@@ -2,7 +2,8 @@ import React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import createHistory from 'history/createBrowserHistory'
-import { ConnectedRouter } from 'react-router-redux'
+import { ConnectedRouter as Router } from 'react-router-redux'
+import 'semantic-ui-css/semantic.min.css'
 
 import configureStore from './configureStore'
 import { fetchAndStoreAccessToken } from './services/auth'
@@ -18,9 +19,9 @@ const MOUNT_NODE = document.getElementById('app')
 
 ReactDOM.render(
   <Provider store={store}>
-    <ConnectedRouter history={history}>
+    <Router history={history}>
       <App />
-    </ConnectedRouter>
+    </Router>
   </Provider>,
   MOUNT_NODE
 )
